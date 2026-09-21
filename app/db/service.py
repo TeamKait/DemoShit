@@ -7,7 +7,7 @@ from app.db.models.user import User
 
 async def connect_db():
     await Tortoise.init(
-        db_url='sqlite://db.sqlite3',
+        db_url='postgres://postgres:root@localhost:5432/demo',
         modules={'models': [
             'app.db.models.product',
             'app.db.models.order',
