@@ -14,3 +14,6 @@ env/
 
 # PyCharm / JetBrains IDE
 .idea/
+
+# environment files
+.env

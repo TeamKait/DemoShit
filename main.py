@@ -8,6 +8,8 @@ from tortoise import Tortoise
 from app.db.service import connect_db
 from app.windows.main import MainWindow
 
+from dotenv import load_dotenv
+
 
 async def main(app: QApplication) -> None:
     await connect_db()
@@ -28,6 +30,8 @@ async def main(app: QApplication) -> None:
 
 
 if __name__ == "__main__":
+    load_dotenv()
+
     app = QApplication(sys.argv)
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)

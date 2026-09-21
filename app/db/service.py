@@ -4,10 +4,11 @@ from app.db.models.order import Order
 from app.db.models.product import Product
 from app.db.models.user import User
 
+from os import getenv
 
 async def connect_db():
     await Tortoise.init(
-        db_url='postgres://postgres:root@localhost:5432/demo',
+        db_url=getenv("DSN"),
         modules={'models': [
             'app.db.models.product',
             'app.db.models.order',
