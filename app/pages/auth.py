@@ -3,7 +3,7 @@ import sys
 import traceback
 
 from PyQt6.QtWidgets import (
-    QLineEdit, QMainWindow, QPushButton, QVBoxLayout, QWidget, QLabel,
+    QLineEdit, QPushButton, QVBoxLayout, QWidget, QLabel,
 )
 from qasync import asyncSlot
 
@@ -20,15 +20,13 @@ def log_uncaught_exceptions(ex_cls, ex, tb):
 sys.excepthook = log_uncaught_exceptions
 
 
-class MainWindow(QMainWindow):
+class AuthPage(QWidget):
     LOGIN_TIMEOUT = 5.0
 
-    def __init__(self):
+    def __init__(self, stacked_widget):
         super().__init__()
+        self.stacked_widget = stacked_widget
         self.auth_service = AuthService(DBService())
-
-        self.setWindowTitle("DemoShit")
-        self.resize(300, 150)
 
         self.label = QLabel("Auth test", self)
         self.login_input = QLineEdit(self)
@@ -48,7 +46,7 @@ class MainWindow(QMainWindow):
 
         container = QWidget()
         container.setLayout(layout)
-        self.setCentralWidget(container)
+        self.setLayout(layout)
 
     @asyncSlot()
     async def on_button_click(self):
@@ -69,6 +67,10 @@ class MainWindow(QMainWindow):
             print(f"Login error: {e}")
             self.label.setText("Ошибка авторизации")
         else:
-            self.label.setText("Success" if ok else "Failed")
+            if ok:
+                self.stacked_widget.setCurrentIndex(1)
+            else:
+                self.label.setText("Failed")
+
         finally:
             self.button.setEnabled(True)

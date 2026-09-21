@@ -1,10 +1,11 @@
+from os import getenv
+
 from tortoise import Tortoise
 
 from app.db.models.order import Order
 from app.db.models.product import Product
 from app.db.models.user import User
 
-from os import getenv
 
 async def connect_db():
     await Tortoise.init(
@@ -25,17 +26,20 @@ class DBService:
     def __init__(self):
         pass
 
-    async def get_products(self, limit: int, offset: int, ascending_order: bool):
+    async def list_products(self, limit: int, offset: int, ascending_order: bool):
         if not limit:
             limit = self.MAX_LIST_ITEMS
         else:
             limit = min(max(limit, 0), self.MAX_LIST_ITEMS)
 
-        order_str = ""
-        if ascending_order:
-            order_str = "-"
+        order_str = "" if ascending_order else "-"
 
-        products = await Product.all().order_by(f'{order_str}id').limit(limit).offset(offset)
+        products = await (Product
+                          .all()
+                          .order_by(f'{order_str}id')
+                          .limit(limit)
+                          .offset(offset)
+                          .prefetch_related('name', 'supplier', 'manufacturer', 'category'))
         return products
 
     async def get_orders(self, limit: int, offset: int, ascending_order: bool):
@@ -44,9 +48,7 @@ class DBService:
         else:
             limit = min(max(limit, 0), self.MAX_LIST_ITEMS)
 
-        order_str = ""
-        if ascending_order:
-            order_str = "-"
+        order_str = "" if ascending_order else "-"
 
         orders = await Order.all().order_by(f'{order_str}id').limit(limit).offset(offset)
         return orders

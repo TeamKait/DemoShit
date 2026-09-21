@@ -2,13 +2,12 @@ import asyncio
 import sys
 
 from PyQt6.QtWidgets import QApplication
+from dotenv import load_dotenv
 from qasync import QEventLoop
 from tortoise import Tortoise
 
 from app.db.service import connect_db
-from app.windows.main import MainWindow
-
-from dotenv import load_dotenv
+from app.pages.main import MainWindow
 
 
 async def main(app: QApplication) -> None:

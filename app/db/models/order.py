@@ -25,7 +25,7 @@ class Order(Model):
     address = fields.TextField()
     client = fields.TextField()
     code = fields.IntField()
-    status = fields.OneToOneField(
+    status = fields.ForeignKeyField(
         "models.Status",
         related_name="order",
         on_delete=fields.CASCADE
