@@ -4,7 +4,6 @@ from concurrent.futures import ThreadPoolExecutor
 
 from PyQt6.QtCore import QObject, pyqtSignal, pyqtSlot
 
-from app.auth.service import AuthService
 from app.db.service import connect_db
 
 
@@ -18,7 +17,6 @@ class DBWorker(QObject):
     def __init__(self, db_service):
         super().__init__()
         self.db_service = db_service
-        self.auth_service = AuthService(db_service)
         self.loop = None
         self._thread = None
         self.executor = ThreadPoolExecutor(max_workers=2)

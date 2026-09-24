@@ -14,7 +14,7 @@ class MainWindow(QStackedWidget):
         self.products_page = ProductsViewPage(self)
         self.addWidget(self.products_page)
 
-        self.setCurrentIndex(1)
+        self.setCurrentIndex(0)
 
         self.setWindowTitle("DemoShit")
         self.resize(300, 150)

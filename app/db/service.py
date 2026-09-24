@@ -11,8 +11,12 @@ async def connect_db():
     await Tortoise.init(
         db_url=getenv("DSN"),
         modules={'models': [
-            'app.db.models.product',
+            'app.db.models.category',
+            'app.db.models.manufacturer',
             'app.db.models.order',
+            'app.db.models.product',
+            'app.db.models.sizes',
+            'app.db.models.stock_item',
             'app.db.models.user',
         ]},
         _enable_global_fallback=True,
@@ -38,8 +42,8 @@ class DBService:
                           .all()
                           .order_by(f'{order_str}id')
                           .limit(limit)
-                          .offset(offset)
-                          .prefetch_related('name', 'supplier', 'manufacturer', 'category'))
+                          .offset(offset))
+        # .prefetch_related('name', 'manufacturer', 'category'))
         return products
 
     async def get_orders(self, limit: int, offset: int, ascending_order: bool):
@@ -54,5 +58,4 @@ class DBService:
         return orders
 
     async def get_user_by_login(self, login: str):
-        user = await User.filter(login=login).first()
-        return user
+        return await User.filter(login=login).first()

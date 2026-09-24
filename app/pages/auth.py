@@ -7,7 +7,6 @@ from PyQt6.QtWidgets import (
 )
 from qasync import asyncSlot
 
-from app.auth.service import AuthService
 from app.db.service import DBService
 
 
@@ -26,39 +25,32 @@ class AuthPage(QWidget):
     def __init__(self, stacked_widget):
         super().__init__()
         self.stacked_widget = stacked_widget
-        self.auth_service = AuthService(DBService())
+        self.db = DBService()
 
         self.label = QLabel("Auth test", self)
         self.login_input = QLineEdit(self)
-        self.password_input = QLineEdit(self)
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.button = QPushButton("Click Me", self)
 
         self.button.clicked.connect(self.on_button_click)
         self.login_input.returnPressed.connect(self.on_button_click)
-        self.password_input.returnPressed.connect(self.on_button_click)
 
         layout = QVBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.login_input)
-        layout.addWidget(self.password_input)
         layout.addWidget(self.button)
 
-        container = QWidget()
-        container.setLayout(layout)
         self.setLayout(layout)
 
     @asyncSlot()
     async def on_button_click(self):
         login = self.login_input.text().strip()
-        passwd = self.password_input.text().strip()
 
         self.button.setEnabled(False)
         self.label.setText("Checking...")
 
         try:
-            ok = await asyncio.wait_for(
-                self.auth_service.login(login, passwd),
+            user = await asyncio.wait_for(
+                self.db.get_user_by_login(login),
                 timeout=self.LOGIN_TIMEOUT,
             )
         except TimeoutError:
@@ -67,7 +59,7 @@ class AuthPage(QWidget):
             print(f"Login error: {e}")
             self.label.setText("Ошибка авторизации")
         else:
-            if ok:
+            if user is not None and user.exists():
                 self.stacked_widget.setCurrentIndex(1)
             else:
                 self.label.setText("Failed")
