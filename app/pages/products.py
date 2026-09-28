@@ -29,5 +29,5 @@ class ProductsViewPage(QWidget):
         products = await self.db.list_products(100, 0, True)
         text = ""
         for product in products:
-            text += f"{product.id} - {product.name.name}\n"
+            text += f"{product.id} - {product.name}\n"
         self.label.setText(text)

@@ -1,4 +1,4 @@
-from os import getenv
+import os
 
 from tortoise import Tortoise
 
@@ -6,21 +6,32 @@ from app.db.models.order import Order
 from app.db.models.product import Product
 from app.db.models.user import User
 
+DB_URL = os.getenv("DSN", "postgres://postgres:root@localhost:5432/demo")
+
+TORTOISE_CONFIG = {
+    "connections": {
+        "default": DB_URL,
+    },
+    "apps": {
+        "models": {
+            "models": [
+                'app.db.models.category',
+                'app.db.models.manufacturer',
+                'app.db.models.order',
+                'app.db.models.product',
+                'app.db.models.sizes',
+                'app.db.models.stock_item',
+                'app.db.models.user',
+            ],
+            "default_connection": "default",
+        }
+    },
+    "_enable_global_fallback": True,
+}
+
 
 async def connect_db():
-    await Tortoise.init(
-        db_url=getenv("DSN"),
-        modules={'models': [
-            'app.db.models.category',
-            'app.db.models.manufacturer',
-            'app.db.models.order',
-            'app.db.models.product',
-            'app.db.models.sizes',
-            'app.db.models.stock_item',
-            'app.db.models.user',
-        ]},
-        _enable_global_fallback=True,
-    )
+    await Tortoise.init(config=TORTOISE_CONFIG)
     await Tortoise.generate_schemas()
 
 
