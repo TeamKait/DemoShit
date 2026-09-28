@@ -3,11 +3,12 @@ import sys
 import traceback
 
 from PyQt6.QtWidgets import (
-    QLineEdit, QPushButton, QVBoxLayout, QWidget, QLabel,
+    QLineEdit, QPushButton, QVBoxLayout, QWidget, QLabel, QSizePolicy,
 )
 from qasync import asyncSlot
 
 from app.db.service import DBService
+from app.pages.products import ProductsViewPage
 
 
 def log_uncaught_exceptions(ex_cls, ex, tb):
@@ -25,6 +26,7 @@ class AuthPage(QWidget):
     def __init__(self, stacked_widget):
         super().__init__()
         self.stacked_widget = stacked_widget
+        self.stacked_widget.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Ignored)
         self.db = DBService()
 
         self.label = QLabel("Auth test", self)
@@ -46,7 +48,7 @@ class AuthPage(QWidget):
         login = self.login_input.text().strip()
 
         self.button.setEnabled(False)
-        self.label.setText("Checking...")
+        self.label.setText("Проверяю...")
 
         try:
             user = await asyncio.wait_for(
@@ -61,9 +63,9 @@ class AuthPage(QWidget):
             self.label.setText("Ошибка авторизации")
         else:
             if user is not None and user.exists():
-                self.stacked_widget.setCurrentIndex(1)
+                self.stacked_widget.switch_page(ProductsViewPage(self.stacked_widget))
             else:
-                self.label.setText("Failed")
+                self.label.setText("Ошибка авторизации")
 
         finally:
             self.button.setEnabled(True)
