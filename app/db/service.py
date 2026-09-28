@@ -26,12 +26,15 @@ TORTOISE_CONFIG = {
             "default_connection": "default",
         }
     },
-    "_enable_global_fallback": True,
 }
 
 
 async def connect_db():
-    await Tortoise.init(config=TORTOISE_CONFIG)
+    await Tortoise.init(
+        config=TORTOISE_CONFIG,
+        _enable_global_fallback=True,
+
+    )
     await Tortoise.generate_schemas()
 
 

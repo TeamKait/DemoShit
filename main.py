@@ -10,9 +10,11 @@ from app.db.service import connect_db
 from app.pages.main import MainWindow
 
 
-async def main(app: QApplication) -> None:
+async def main() -> None:
+    load_dotenv()
     await connect_db()
 
+    app = QApplication.instance() or QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
     window = MainWindow()
@@ -22,18 +24,14 @@ async def main(app: QApplication) -> None:
     app.lastWindowClosed.connect(last_window_closed.set)
 
     await last_window_closed.wait()
-
     await Tortoise.close_connections()
-
     app.quit()
 
 
 if __name__ == "__main__":
-    load_dotenv()
-
     app = QApplication(sys.argv)
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
 
     with loop:
-        loop.run_until_complete(main(app))
+        loop.run_until_complete(main())

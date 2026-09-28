@@ -53,6 +53,7 @@ class AuthPage(QWidget):
                 self.db.get_user_by_login(login),
                 timeout=self.LOGIN_TIMEOUT,
             )
+            print(user)
         except TimeoutError:
             self.label.setText("Превышено время ожидания")
         except Exception as e:
