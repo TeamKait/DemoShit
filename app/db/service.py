@@ -56,8 +56,8 @@ class DBService:
                           .all()
                           .order_by(f'{order_str}id')
                           .limit(limit)
-                          .offset(offset))
-        # .prefetch_related('name', 'manufacturer', 'category'))
+                          .offset(offset)
+                          .prefetch_related('manufacturer', 'category'))
         return products
 
     async def get_orders(self, limit: int, offset: int, ascending_order: bool):

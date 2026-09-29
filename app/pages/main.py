@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QStackedWidget, QWidget, QSizePolicy
 
-from app.pages.auth import AuthPage
+from app.pages.products import ProductsPage
 
 
 class MainWindow(QStackedWidget):
@@ -10,7 +10,8 @@ class MainWindow(QStackedWidget):
 
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
-        self.current_page = AuthPage(self)
+        self.current_page = ProductsPage(self)
+        # self.current_page = AuthPage(self)
         self.addWidget(self.current_page)
         self.setCurrentIndex(0)
 

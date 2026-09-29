@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
 from qasync import asyncSlot
 
 from app.db.service import DBService
-from app.pages.products import ProductsViewPage
+from app.pages.products import ProductsPage
 
 
 def log_uncaught_exceptions(ex_cls, ex, tb):
@@ -63,7 +63,7 @@ class AuthPage(QWidget):
             self.label.setText("Ошибка авторизации")
         else:
             if user is not None and user.exists():
-                self.stacked_widget.switch_page(ProductsViewPage(self.stacked_widget))
+                self.stacked_widget.switch_page(ProductsPage(self.stacked_widget))
             else:
                 self.label.setText("Ошибка авторизации")
 
